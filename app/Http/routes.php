@@ -11,53 +11,41 @@
 |
 */
 
-use App\Domain\Entities\Task;
-use App\Domain\Repositories\TaskRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Illuminate\Http\Request;
+// Authentication routes...
+Route::get('auth/login', 'Auth\AuthController@getLogin');
+Route::post('auth/login', 'Auth\AuthController@postLogin');
+Route::get('auth/logout', 'Auth\AuthController@getLogout');
 
-/**
- * Show Task Dashboard
- */
-Route::get('/', function (TaskRepository $repository) {
-    return view('tasks', [
-        'tasks' => $repository->all('createdAt', 'ASC')
-    ]);
-});
+// Registration routes...
+Route::get('auth/register', 'Auth\AuthController@getRegister');
+Route::post('auth/register', 'Auth\AuthController@postRegister');
 
-/**
- * Add New Task
- */
-Route::post('/task', function (Request $request, EntityManagerInterface $em) {
-    $validator = Validator::make($request->all(), [
-        'name' => 'required|max:255',
-    ]);
+// Password reset link request routes...
+Route::get('password/email', 'Auth\PasswordController@getEmail');
+Route::post('password/email', 'Auth\PasswordController@postEmail');
 
-    if ($validator->fails()) {
-        return redirect('/')
-            ->withInput()
-            ->withErrors($validator);
-    }
+// Password reset routes...
+Route::get('password/reset/{token}', 'Auth\PasswordController@getReset');
+Route::post('password/reset', 'Auth\PasswordController@postReset');
 
-    $task = new Task(
-        $request->get('name')
-    );
-
-    $em->persist($task);
-    $em->flush();
-
+Route::get('home', function() {
     return redirect('/');
 });
 
-/**
- * Delete Task
- */
-Route::delete('/task/{id}', function ($id, TaskRepository $repository, EntityManagerInterface $em) {
+Route::group(['middleware' => 'auth'], function() {
+    /**
+     * Show Task Dashboard
+     */
+    Route::get('/', 'TasksController@index');
 
-    $task = $repository->find($id);
+    /**
+     * Add New Task
+     */
+    Route::post('/task', 'TasksController@store');
 
-    $em->remove($task);
-    $em->flush();
-
-    return redirect('/');
+    /**
+     * Delete Task
+     */
+    Route::delete('/task/{id}', 'TasksController@delete');
 });
+

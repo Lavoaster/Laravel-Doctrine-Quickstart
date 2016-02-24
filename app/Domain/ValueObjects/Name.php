@@ -13,53 +13,58 @@ class Name
      * @ORM\Column(type="string")
      * @var string
      */
-    protected $firstname;
+    protected $firstName;
 
     /**
      * @ORM\Column(type="string")
      * @var string
      */
-    protected $lastname;
+    protected $lastName;
 
     /**
-     * @param string $firstname
-     * @param string $lastname
+     * @param string $firstName
+     * @param string $lastName
      */
-    public function __construct($firstname, $lastname)
+    public function __construct($firstName, $lastName)
     {
-        $this->firstname = $firstname;
-        $this->lastname  = $lastname;
+        $this->firstName = $firstName;
+        $this->lastName  = $lastName;
     }
 
     /**
      * @return string
      */
-    public function getFirstname()
+    public function getFirstName()
     {
-        return $this->firstname;
+        return $this->firstName;
     }
 
     /**
-     * @param string $firstname
+     * @param string $firstName
      */
-    public function setFirstname($firstname)
+    public function setFirstName($firstName)
     {
-        $this->firstname = $firstname;
+        $this->firstName = $firstName;
     }
 
     /**
      * @return string
      */
-    public function getLastname()
+    public function getLastName()
     {
-        return $this->lastname;
+        return $this->lastName;
     }
 
     /**
-     * @param string $lastname
+     * @param string $lastName
      */
-    public function setLastname($lastname)
+    public function setLastName($lastName)
     {
-        $this->lastname = $lastname;
+        $this->lastName = $lastName;
+    }
+
+    public function __toString()
+    {
+        return $this->firstName . ' ' . $this->lastName;
     }
 }

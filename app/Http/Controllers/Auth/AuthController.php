@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
+use App\Domain\Entities\User;
+use App\Domain\ValueObjects\Name;
+use Doctrine\ORM\EntityManagerInterface;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -22,15 +24,20 @@ class AuthController extends Controller
     */
 
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
 
     /**
      * Create a new authentication controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(EntityManagerInterface $entityManager)
     {
         $this->middleware('guest', ['except' => 'getLogout']);
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -43,7 +50,7 @@ class AuthController extends Controller
     {
         return Validator::make($data, [
             'name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users',
+            'email' => 'required|email|max:255|unique:App\\Domain\\Entities\\User',
             'password' => 'required|confirmed|min:6',
         ]);
     }
@@ -56,10 +63,17 @@ class AuthController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
+        $user = new User();
+
+        $nameSplit = explode(' ', $data['name']);
+        $name = new Name($nameSplit[0], $nameSplit[1]);
+
+        $user->setName($name);
+        $user->setEmail($data['email']);
+        $user->setPassword($data['password']);
+
+        $this->entityManager->persist($user);
+
+        return $user;
     }
 }

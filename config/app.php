@@ -141,7 +141,10 @@ return [
          * 3rd Party Service Providers...
          */
         LaravelDoctrine\ORM\DoctrineServiceProvider::class,
+        LaravelDoctrine\Migrations\MigrationsServiceProvider::class,
         LaravelDoctrine\Extensions\GedmoExtensionsServiceProvider::class,
+
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
 
         /*
          * Application Service Providers...

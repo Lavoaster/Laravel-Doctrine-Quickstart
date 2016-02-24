@@ -48,12 +48,20 @@
 						<span class="icon-bar"></span>
 					</button>
 
-					<a class="navbar-brand" href="#">Task List</a>
+					<a class="navbar-brand" href="/">Task List</a>
 				</div>
 
 				<div id="navbar" class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
-						&nbsp;
+						@if(Auth::guest())
+							<li>
+								<a href="/auth/register">Register</a>
+							</li>
+						@else
+							<li>
+								<a href="/auth/logout">Logout</a>
+							</li>
+						@endif
 					</ul>
 				</div>
 			</div>

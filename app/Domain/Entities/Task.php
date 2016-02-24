@@ -3,7 +3,9 @@
 namespace App\Domain\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use LaravelDoctrine\Extensions\Timestamps\Timestamps;
+
 
 /**
  * @ORM\Entity()
@@ -14,9 +16,9 @@ class Task
 
     /**
      * @ORM\Id()
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @var int
+     * @ORM\Column(type="guid")
+     * @ORM\GeneratedValue(strategy="UUID")
+     * @var string
      */
     protected $id;
 
@@ -27,6 +29,13 @@ class Task
     protected $name;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Domain\Entities\User",inversedBy="tasks")
+     * @Gedmo\Blameable(on="create")
+     * @var User
+     */
+    protected $createdBy;
+
+    /**
      * @param string $name
      */
     public function __construct($name)
@@ -35,9 +44,9 @@ class Task
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getId()
+    public function getId():string
     {
         return $this->id;
     }
@@ -45,7 +54,7 @@ class Task
     /**
      * @return string
      */
-    public function getName()
+    public function getName():string
     {
         return $this->name;
     }
@@ -53,8 +62,13 @@ class Task
     /**
      * @param string $name
      */
-    public function setName($name)
+    public function setName(string $name)
     {
         $this->name = $name;
+    }
+
+    public function getCreatedBy():User
+    {
+        return $this->createdBy;
     }
 }

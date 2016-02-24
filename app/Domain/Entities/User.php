@@ -2,9 +2,10 @@
 
 namespace App\Domain\Entities;
 
+use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Domain\ValueObjects\Name;
-use App\Domain\ValueObjects\Email;
 use LaravelDoctrine\ORM\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Foundation\Auth\Access\Authorizable;
@@ -15,6 +16,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
 /**
  * @ORM\Entity()
+ * @ORM\Table(name="users")
  */
 class User implements AuthenticatableContract, CanResetPasswordContract, AuthorizableContract
 {
@@ -22,9 +24,9 @@ class User implements AuthenticatableContract, CanResetPasswordContract, Authori
 
     /**
      * @ORM\Id()
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @var int
+     * @ORM\Column(type="guid")
+     * @ORM\GeneratedValue(strategy="UUID")
+     * @var string
      */
     protected $id;
 
@@ -39,24 +41,29 @@ class User implements AuthenticatableContract, CanResetPasswordContract, Authori
 
     /**
      * @ORM\Column(type="string")
-     * @var Email
+     * @var string
      */
     protected $email;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Domain\Entities\Task",mappedBy="createdBy")
+     * @var ArrayCollection|Task[]
+     */
+    protected $tasks;
 
     /**
      * @param Name   $name
      * @param string $email
      */
-    public function __construct(Name $name, $email)
+    public function __construct()
     {
-        $this->email = $email;
-        $this->name  = $name;
+
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getId()
+    public function getId():string
     {
         return $this->id;
     }
@@ -64,7 +71,7 @@ class User implements AuthenticatableContract, CanResetPasswordContract, Authori
     /**
      * @return Name
      */
-    public function getName()
+    public function getName():Name
     {
         return $this->name;
     }
@@ -80,7 +87,7 @@ class User implements AuthenticatableContract, CanResetPasswordContract, Authori
     /**
      * @return string
      */
-    public function getEmail()
+    public function getEmail():string
     {
         return $this->email;
     }
@@ -91,5 +98,10 @@ class User implements AuthenticatableContract, CanResetPasswordContract, Authori
     public function setEmail($email)
     {
         $this->email = $email;
+    }
+
+    public function setPassword($password)
+    {
+        $this->password = bcrypt($password);
     }
 }

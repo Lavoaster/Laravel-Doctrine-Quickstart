@@ -53,7 +53,9 @@
 							<tbody>
 								@foreach ($tasks as $task)
 									<tr>
-										<td class="table-text"><div>{{ $task->getName() }}</div></td>
+										<td class="table-text">
+											<div>{{ $task->getName() }} - {{ $task->getCreatedBy()->getName() }}</div>
+										</td>
 
 										<!-- Task Delete Button -->
 										<td>

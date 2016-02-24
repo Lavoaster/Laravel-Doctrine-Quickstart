@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use App\Domain\Entities\Task;
 use App\Domain\Repositories\TaskRepository;
+use App\Infrastructure\Extensions\Types\CarbonType;
 use App\Infrastructure\Repositories\DoctrineTaskRepository;
+use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
@@ -24,5 +26,7 @@ class AppServiceProvider extends ServiceProvider
                 new ClassMetadata(Task::class)
             );
         });
+
+        Type::overrideType('datetime', CarbonType::class);
     }
 }
