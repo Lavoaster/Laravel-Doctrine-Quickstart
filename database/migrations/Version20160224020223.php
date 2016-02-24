@@ -28,7 +28,6 @@ class Version20160224020223 extends AbstractMigration
     {
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('CREATE SCHEMA public');
         $this->addSql('ALTER TABLE tasks DROP CONSTRAINT FK_50586597B03A8386');
         $this->addSql('DROP INDEX IDX_50586597B03A8386');
         $this->addSql('ALTER TABLE tasks RENAME COLUMN created_by_id TO user_id');

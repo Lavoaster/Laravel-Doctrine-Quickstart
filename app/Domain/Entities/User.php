@@ -46,7 +46,7 @@ class User implements AuthenticatableContract, CanResetPasswordContract, Authori
     protected $email;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Domain\Entities\Task",mappedBy="createdBy")
+     * @ORM\OneToMany(targetEntity="App\Domain\Entities\Task",mappedBy="createdBy")
      * @var ArrayCollection|Task[]
      */
     protected $tasks;

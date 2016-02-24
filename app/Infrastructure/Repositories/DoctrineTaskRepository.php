@@ -15,8 +15,14 @@ class DoctrineTaskRepository extends EntityRepository implements TaskRepository
      *
      * @return \App\Domain\Entities\Task[]
      */
-    public function all($orderField = 'id', $order = 'ASC')
+    public function all(string $orderField = 'id', string $order = 'ASC')
     {
         return $this->findBy([], [$orderField => $order]);
     }
+
+    public function findByTaskName(string $name)
+    {
+        return $this->findBy(['name' => $name]);
+    }
+
 }

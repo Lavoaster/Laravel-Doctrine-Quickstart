@@ -12,7 +12,7 @@ interface TaskRepository
      *
      * @return \App\Domain\Entities\Task[]
      */
-    public function all($orderField = 'id', $order = 'ASC');
+    public function all(string $orderField = 'id', string $order = 'ASC');
 
     /**
      * Finds an entity by its primary key / identifier.
@@ -26,4 +26,6 @@ interface TaskRepository
      * @return \App\Domain\Entities\Task
      */
     public function find($id, $lockMode = null, $lockVersion = null);
+
+    public function findByTaskName(string $name);
 }
